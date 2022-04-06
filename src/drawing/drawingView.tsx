@@ -11,7 +11,6 @@ import {
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, Dimensions, View, Button} from 'react-native';
 import recognizer from '../recognizer/recognizer';
-import {Point} from './point';
 import {Stroke} from './stroke';
 
 const window = Dimensions.get('window');
@@ -22,8 +21,8 @@ textPaint.setStrokeWidth(1);
 textPaint.setColor(Skia.Color('black'));
 
 export const DrawingView: React.FC<any> = () => {
-  const [pathToDraw] = useState<SkPath>(Skia.Path.Make());
-  const [strokes] = useState<Stroke[]>([]);
+  const [pathToDraw, setPathToDraw] = useState<SkPath>(Skia.Path.Make());
+  const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<Stroke>(new Stroke());
 
   const onDrawingStart = useCallback(
@@ -53,21 +52,45 @@ export const DrawingView: React.FC<any> = () => {
     onEnd: onDrawingFinished,
   });
 
-  const onDraw = useDrawCallback((canvas, info) => {
-    touchHandler(info.touches);
-    canvas.drawPath(pathToDraw, textPaint);
-  });
+  const onDraw = useDrawCallback(
+    (canvas, info) => {
+      touchHandler(info.touches);
+      canvas.drawPath(pathToDraw, textPaint);
+    },
+    [pathToDraw],
+  );
 
   const onDonePressed = useCallback(() => {
     recognizer.recognize(strokes);
   }, [strokes]);
 
+  const onClearPressed = useCallback(() => {
+    setCurrentStroke(new Stroke());
+    setStrokes([]);
+    setPathToDraw(Skia.Path.Make());
+  }, []);
+
+  const renderClearButton = () => {
+    return (
+      <View style={styles.clearButton}>
+        <Button title="Clear" onPress={onClearPressed} />
+      </View>
+    );
+  };
+
+  const renderDoneButton = () => {
+    return (
+      <View style={styles.doneButton}>
+        <Button title="Done!" onPress={onDonePressed} />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <SkiaView style={styles.stroke} onDraw={onDraw} />
-      <View style={styles.buttonContainer}>
-        <Button title="Done!" onPress={onDonePressed} />
-      </View>
+      {renderClearButton()}
+      {renderDoneButton()}
     </View>
   );
 };
@@ -76,11 +99,19 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f0f0f0',
   },
-  buttonContainer: {
+  doneButton: {
     position: 'absolute',
     width: '100%',
     bottom: 0,
     justifyContent: 'center',
+  },
+  clearButton: {
+    position: 'absolute',
+    width: '100%',
+    top: 0,
+    paddingEnd: 16,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   stroke: {
     width: window.width,
