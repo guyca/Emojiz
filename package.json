@@ -6,13 +6,14 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "test": "jest",
+    "xcode": "open ios/KALCulator.xcworkspace",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.109-alpha/shopify-react-native-skia-0.1.109.tgz",
     "react": "17.0.2",
-    "react-native": "0.68.0"
+    "react-native": "0.68.0",
+    "zustand": "^3.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
