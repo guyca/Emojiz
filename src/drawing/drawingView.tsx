@@ -1,5 +1,4 @@
 import {
-  ExtendedTouchInfo,
   PaintStyle,
   Skia,
   SkiaView,
@@ -9,7 +8,7 @@ import {
   useTouchHandler,
 } from '@shopify/react-native-skia';
 import React, {useCallback, useState} from 'react';
-import {StyleSheet, Dimensions, View, Button} from 'react-native';
+import {StyleSheet, Dimensions, View, Button, Text} from 'react-native';
 import recognizer from '../recognizer/recognizer';
 import {Stroke} from './stroke';
 
@@ -26,25 +25,30 @@ export const DrawingView: React.FC<any> = () => {
   const [currentStroke, setCurrentStroke] = useState<Stroke>(new Stroke());
 
   const onDrawingStart = useCallback(
-    ({x, y}: TouchInfo) => {
-      currentStroke.addPoint(x, y);
-      strokes.push(currentStroke);
+    ({x, y, timestamp}: TouchInfo) => {
+      currentStroke.addPoint(x, y, timestamp);
       pathToDraw.moveTo(x, y);
     },
-    [currentStroke, strokes, pathToDraw],
+    [currentStroke, pathToDraw],
   );
 
   const onDrawingActive = useCallback(
-    ({x, y}: ExtendedTouchInfo) => {
+    ({x, y, timestamp}: TouchInfo) => {
       pathToDraw.lineTo(x, y);
-      currentStroke!.addPoint(x, y);
+      currentStroke!.addPoint(x, y, timestamp);
     },
     [pathToDraw, currentStroke],
   );
 
-  const onDrawingFinished = useCallback(() => {
-    setCurrentStroke(new Stroke());
-  }, []);
+  const onDrawingFinished = useCallback(
+    ({x, y, timestamp}: TouchInfo) => {
+      pathToDraw.lineTo(x, y);
+      currentStroke.addPoint(x, y, timestamp);
+      strokes.push(currentStroke);
+      setCurrentStroke(new Stroke());
+    },
+    [pathToDraw, currentStroke, strokes],
+  );
 
   const touchHandler = useTouchHandler({
     onStart: onDrawingStart,
@@ -86,8 +90,17 @@ export const DrawingView: React.FC<any> = () => {
     );
   };
 
+  const renderEmojiView = () => {
+    return (
+      <View style={styles.emojiContainer}>
+        <Text style={styles.emojiView}>😂</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
+      {renderEmojiView()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
       {renderClearButton()}
       {renderDoneButton()}
@@ -116,5 +129,15 @@ const styles = StyleSheet.create({
   stroke: {
     width: window.width,
     height: '100%',
+  },
+  emojiContainer: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emojiView: {
+    fontSize: 300,
   },
 });

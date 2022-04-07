@@ -3,8 +3,6 @@
 #import <MLKitCommon/MLKitCommon.h>
 #import <MLKitDigitalInkRecognition/MLKitDigitalInkRecognition.h>
 
-static const double kMillisecondsPerTimeInterval = 1000.0;
-
 @implementation PathRecognizer
 
 RCT_EXPORT_MODULE()
@@ -52,9 +50,9 @@ RCT_EXPORT_METHOD(recognize:(NSArray*)paths
     {
       NSNumber *x = @([[point valueForKey:@"x"] floatValue]);
       NSNumber *y = @([[point valueForKey:@"y"] floatValue]);
-      NSNumber *time = @([[point valueForKey:@"time"] longValue]);
+      NSNumber *timestamp = @([[point valueForKey:@"timestamp"] longValue]);
 
-      [points addObject:[[MLKStrokePoint alloc] initWithX:x.floatValue y:y.floatValue t:time.longValue]];
+      [points addObject:[[MLKStrokePoint alloc] initWithX:x.floatValue y:y.floatValue t:timestamp.longValue]];
     }
     [strokes addObject:[[MLKStroke alloc] initWithPoints:points]];
   }
