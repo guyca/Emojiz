@@ -16,13 +16,14 @@ const window = Dimensions.get('window');
 
 const textPaint = Skia.Paint();
 textPaint.setStyle(PaintStyle.Stroke);
-textPaint.setStrokeWidth(1);
+textPaint.setStrokeWidth(4);
 textPaint.setColor(Skia.Color('black'));
 
 export const DrawingView: React.FC<any> = () => {
   const [pathToDraw, setPathToDraw] = useState<SkPath>(Skia.Path.Make());
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<Stroke>(new Stroke());
+  const [recognizedEmoji, setRecognizedEmoji] = useState<string | undefined>();
 
   const onDrawingStart = useCallback(
     ({x, y, timestamp}: TouchInfo) => {
@@ -67,8 +68,9 @@ export const DrawingView: React.FC<any> = () => {
     [pathToDraw, touchHandler],
   );
 
-  const onDonePressed = useCallback(() => {
-    recognizer.recognize(strokes);
+  const onDonePressed = useCallback(async () => {
+    const result = await recognizer.recognize(strokes);
+    setRecognizedEmoji(result[0].text);
   }, [strokes]);
 
   const onClearPressed = useCallback(() => {
@@ -96,7 +98,7 @@ export const DrawingView: React.FC<any> = () => {
   const renderEmojiView = () => {
     return (
       <View style={styles.emojiContainer}>
-        <Text style={styles.emojiView}>😂</Text>
+        <Text style={styles.emojiView}>{recognizedEmoji}</Text>
       </View>
     );
   };
