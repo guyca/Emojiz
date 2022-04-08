@@ -1,15 +1,12 @@
 import {NativeModules} from 'react-native';
 import {Stroke} from '../drawing/stroke';
 
-type RecognitionResult = {
-  text: string;
-  score: number;
-}[];
-
 class Recognizer {
+  private readonly pathRecognizer = NativeModules.PathRecognizer;
+
   async recognize(strokes: Stroke[]): Promise<RecognitionResult> {
     try {
-      const result = await NativeModules.PathRecognizer.recognize(
+      const result = await this.pathRecognizer.recognize(
         strokes.map(s => s.getPoints()),
       );
       console.log(result);
@@ -20,5 +17,10 @@ class Recognizer {
     return [];
   }
 }
+
+type RecognitionResult = {
+  text: string;
+  score: number;
+}[];
 
 export default new Recognizer();

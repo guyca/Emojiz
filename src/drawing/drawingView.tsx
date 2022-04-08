@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     bottom: 0,
-    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 16,
   },
   clearButton: {
     position: 'absolute',
