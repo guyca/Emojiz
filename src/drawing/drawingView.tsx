@@ -50,18 +50,21 @@ export const DrawingView: React.FC<any> = () => {
     [pathToDraw, currentStroke, strokes],
   );
 
-  const touchHandler = useTouchHandler({
-    onStart: onDrawingStart,
-    onActive: onDrawingActive,
-    onEnd: onDrawingFinished,
-  });
+  const touchHandler = useTouchHandler(
+    {
+      onStart: onDrawingStart,
+      onActive: onDrawingActive,
+      onEnd: onDrawingFinished,
+    },
+    [currentStroke],
+  );
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
       touchHandler(info.touches);
       canvas.drawPath(pathToDraw, textPaint);
     },
-    [pathToDraw],
+    [pathToDraw, touchHandler],
   );
 
   const onDonePressed = useCallback(() => {
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     top: 0,
-    paddingEnd: 16,
+    padding: 16,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },

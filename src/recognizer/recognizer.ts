@@ -3,10 +3,14 @@ import {Stroke} from '../drawing/stroke';
 
 class Recognizer {
   async recognize(strokes: Stroke[]) {
-    const result = await NativeModules.PathRecognizer.recognize(
-      strokes.map(s => s.getPoints()),
-    );
-    console.log(result);
+    try {
+      const result = await NativeModules.PathRecognizer.recognize(
+        strokes.map(s => s.getPoints()),
+      );
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
