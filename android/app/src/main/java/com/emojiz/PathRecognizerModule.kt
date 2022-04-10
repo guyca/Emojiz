@@ -1,4 +1,4 @@
-package com.kalculator
+package com.emojiz
 
 import com.facebook.react.bridge.*
 import com.google.mlkit.common.model.DownloadConditions

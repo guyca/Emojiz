@@ -1,4 +1,4 @@
-package com.kalculator.newarchitecture.modules;
+package com.emojiz.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

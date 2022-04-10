@@ -1,4 +1,4 @@
-package com.kalculator.newarchitecture.components;
+package com.emojiz.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

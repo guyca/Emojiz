@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "KALCulator.app"
-               BlueprintName = "KALCulator"
-               ReferencedContainer = "container:KALCulator.xcodeproj">
+               BuildableName = "Emojiz.app"
+               BlueprintName = "Emojiz"
+               ReferencedContainer = "container:Emojiz.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "KALCulatorTests.xctest"
-               BlueprintName = "KALCulatorTests"
-               ReferencedContainer = "container:KALCulator.xcodeproj">
+               BuildableName = "EmojizTests.xctest"
+               BlueprintName = "EmojizTests"
+               ReferencedContainer = "container:Emojiz.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "KALCulator.app"
-            BlueprintName = "KALCulator"
-            ReferencedContainer = "container:KALCulator.xcodeproj">
+            BuildableName = "Emojiz.app"
+            BlueprintName = "Emojiz"
+            ReferencedContainer = "container:Emojiz.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "KALCulator.app"
-            BlueprintName = "KALCulator"
-            ReferencedContainer = "container:KALCulator.xcodeproj">
+            BuildableName = "Emojiz.app"
+            BlueprintName = "Emojiz"
+            ReferencedContainer = "container:Emojiz.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

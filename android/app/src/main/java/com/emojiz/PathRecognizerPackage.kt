@@ -1,4 +1,4 @@
-package com.kalculator
+package com.emojiz
 
 import android.view.View
 import com.facebook.react.ReactPackage

@@ -6,7 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
-    "xcode": "open ios/KALCulator.xcworkspace",
+    "xcode": "open ios/Emojiz.xcworkspace",
     "androidStudio": "open -a /Applications/Android\\ Studio.app ./android",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
