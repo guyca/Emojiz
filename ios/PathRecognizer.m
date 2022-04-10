@@ -69,4 +69,9 @@ RCT_EXPORT_METHOD(recognize:(NSArray*)paths
   }
   return converted;
 }
+
++ (BOOL)requiresMainQueueSetup
+{
+  return NO;
+}
 @end
