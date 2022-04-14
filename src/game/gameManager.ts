@@ -3,8 +3,10 @@ import recognizer from '../recognizer/recognizer';
 import {Cta} from './cta';
 import {RecognitionResult} from './RecognitionResult';
 
-const EMOJIS = ['😶', '😆', '😁', '😂', '🙃', '😍', '😛', '😎', '💩', '🦄'];
-const ROUNDS = 3;
+// When a user is not correct and loses a life - animate the heart. tranaltion y + alpha
+const EMOJIS = ['😶', '😆', '😂', '🙃', '😍', '😛', '😎', '💩', '🦄'];
+const ROUNDS = EMOJIS.length;
+const LIVES = 3;
 
 export enum GameState {
   WELCOME,
@@ -14,7 +16,7 @@ export enum GameState {
 }
 
 class GameManager {
-  private level = 0;
+  private round = 0;
   private failedAttempts = 0;
   private state = GameState.WELCOME;
 
@@ -31,19 +33,39 @@ class GameManager {
   }
 
   get shouldShowPlayNextRoundButton(): boolean {
+    return this.isRoundOver && !this.isGameOver;
+  }
+
+  get shouldShowRoundResult(): boolean {
+    return this.isRoundOver && !this.isGameOver;
+  }
+
+  get isRoundOver(): boolean {
     return [GameState.SUCCESS, GameState.FAIL].includes(this.state);
   }
 
   get lives(): string {
-    return new Array(ROUNDS - this.failedAttempts).fill('❤️').join('');
+    return new Array(LIVES - this.failedAttempts).fill('❤️').join('');
   }
 
   get emojiForCurrentLevel(): string {
-    return EMOJIS[this.level];
+    return EMOJIS[this.round - 1];
   }
 
-  startGame() {
-    this.state = GameState.DRAWING;
+  get isGameWon(): boolean {
+    return this.isGameOver && this.failedAttempts < LIVES;
+  }
+
+  get isGameLost(): boolean {
+    return this.isGameOver && this.failedAttempts >= LIVES;
+  }
+
+  get isGameOver(): boolean {
+    return this.round === ROUNDS && this.isRoundOver;
+  }
+
+  get isWinner(): boolean {
+    return this.round === ROUNDS && this.state !== GameState.DRAWING && this.failedAttempts < LIVES;
   }
 
   getCta(): Cta {
@@ -74,12 +96,16 @@ class GameManager {
     return {
       lives: this.lives,
       recognizedEmoji: candidates[0].text,
+      roundResult: {
+        text: this.state === GameState.SUCCESS ? 'Correct!' : 'Better Luck Next Time',
+        color: this.state === GameState.SUCCESS ? 'green' : 'red',
+      },
     };
   }
 
   startNextRound() {
     this.state = GameState.DRAWING;
-    this.level++;
+    this.round++;
   }
 }
 

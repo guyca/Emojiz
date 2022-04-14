@@ -42,6 +42,10 @@ export const DrawingView: React.FC<any> = () => {
     onGetStartedPressed,
     showDoneButton,
     showPlayNextRoundButton,
+    showRoundResult,
+    roundResult,
+    isGameWon,
+    isGameLost,
   } = useGameManager(strokes, clear);
   const fadeAnimation = useRef(new Animated.Value(1)).current;
 
@@ -133,6 +137,14 @@ export const DrawingView: React.FC<any> = () => {
     );
   };
 
+  const renderRoundResult = () => {
+    return (
+      showRoundResult && (
+        <Text style={[styles.roundResult, {color: roundResult?.color}]}>{roundResult?.text}</Text>
+      )
+    );
+  };
+
   const renderEmoji = () => {
     return recognizedEmoji ? (
       <View style={styles.emojiContainer}>
@@ -189,6 +201,42 @@ export const DrawingView: React.FC<any> = () => {
     );
   };
 
+  const renderGameWon = () => {
+    return (
+      isGameWon && (
+        <View style={styles.welcomeContainer}>
+          <View style={styles.welcomeBackground}>
+            <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Won!</Text>
+            <AnimatedLottieView
+              style={{width: '100%'}}
+              source={require('../res/gameWon.json')}
+              autoPlay
+              loop={false}
+              speed={0.7}
+            />
+          </View>
+        </View>
+      )
+    );
+  };
+
+  const renderGameLost = () => {
+    return (
+      isGameLost && (
+        <View style={styles.welcomeContainer}>
+          <View style={styles.welcomeBackground}>
+            <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Over</Text>
+            <AnimatedLottieView
+              style={{width: '100%'}}
+              source={require('../res/crying.json')}
+              autoPlay
+            />
+          </View>
+        </View>
+      )
+    );
+  };
+
   return (
     <View style={styles.container}>
       {renderEmoji()}
@@ -198,6 +246,9 @@ export const DrawingView: React.FC<any> = () => {
       {renderWelcome()}
       {renderDoneButton()}
       {renderPLayNextRoundButton()}
+      {renderRoundResult()}
+      {renderGameWon()}
+      {renderGameLost()}
     </View>
   );
 };
@@ -289,5 +340,12 @@ const styles = StyleSheet.create({
   confetti: {
     position: 'absolute',
     height: '100%',
+  },
+  roundResult: {
+    position: 'absolute',
+    bottom: 100,
+    alignSelf: 'center',
+    fontSize: 18,
+    fontWeight: '900',
   },
 });
