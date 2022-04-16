@@ -2,7 +2,6 @@ import {
   PaintStyle,
   Skia,
   SkiaView,
-  SkPath,
   TouchInfo,
   useDrawCallback,
   useTouchHandler,
@@ -10,10 +9,10 @@ import {
 import AnimatedLottieView from 'lottie-react-native';
 import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import {StyleSheet, Dimensions, View, Button, Text, Platform, Animated} from 'react-native';
 import {Game} from '../game/game';
-import {Stroke} from './stroke';
+import {Canvas} from './canvas';
 
 const window = Dimensions.get('window');
 
@@ -22,16 +21,13 @@ textPaint.setStyle(PaintStyle.Stroke);
 textPaint.setStrokeWidth(4);
 textPaint.setColor(Skia.Color('black'));
 
-export const DrawingView = observer(({game}: {game: Game}) => {
-  const [pathToDraw, setPathToDraw] = useState<SkPath>(Skia.Path.Make());
-  const [strokes, setStrokes] = useState<Stroke[]>([]);
-  const [currentStroke, setCurrentStroke] = useState<Stroke>(new Stroke());
+interface Props {
+  game: Game;
+  drawing: Canvas;
+}
+
+export const DrawingView = observer(({game, drawing}: Props) => {
   const fadeAnimation = useRef(new Animated.Value(1)).current;
-  const clear = useCallback(() => {
-    setStrokes([]);
-    setCurrentStroke(new Stroke());
-    setPathToDraw(Skia.Path.Make());
-  }, []);
 
   useEffect(() => {
     if (game.emojiToRecognize) {
@@ -45,29 +41,24 @@ export const DrawingView = observer(({game}: {game: Game}) => {
   }, [game.emojiToRecognize, fadeAnimation]);
 
   const onDrawingStart = useCallback(
-    ({x, y, timestamp}: TouchInfo) => {
-      currentStroke.addPoint(x, y, timestamp);
-      pathToDraw.moveTo(x, y);
+    (touchInfo: TouchInfo) => {
+      drawing.onDrawingStart(touchInfo);
     },
-    [currentStroke, pathToDraw],
+    [drawing],
   );
 
   const onDrawingActive = useCallback(
-    ({x, y, timestamp}: TouchInfo) => {
-      pathToDraw.lineTo(x, y);
-      currentStroke!.addPoint(x, y, timestamp);
+    (touchInfo: TouchInfo) => {
+      drawing.onDrawingActive(touchInfo);
     },
-    [pathToDraw, currentStroke],
+    [drawing],
   );
 
   const onDrawingFinished = useCallback(
-    ({x, y, timestamp}: TouchInfo) => {
-      pathToDraw.lineTo(x, y);
-      currentStroke.addPoint(x, y, timestamp);
-      strokes.push(currentStroke);
-      setCurrentStroke(new Stroke());
+    (touchInfo: TouchInfo) => {
+      drawing.onDrawingFinished(touchInfo);
     },
-    [pathToDraw, currentStroke, strokes],
+    [drawing],
   );
 
   const touchHandler = useTouchHandler(
@@ -76,36 +67,22 @@ export const DrawingView = observer(({game}: {game: Game}) => {
       onActive: onDrawingActive,
       onEnd: onDrawingFinished,
     },
-    [currentStroke],
+    [],
   );
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
       touchHandler(info.touches);
-      canvas.drawPath(pathToDraw, textPaint);
+      canvas.drawPath(drawing.pathToDraw, textPaint);
     },
-    [pathToDraw, touchHandler],
+    [drawing.strokes],
   );
-
-  const onClearPressed = useCallback(() => {
-    setCurrentStroke(new Stroke());
-    setStrokes([]);
-    setPathToDraw(Skia.Path.Make());
-  }, []);
-
-  const renderClearButton = () => {
-    return (
-      <View style={styles.clearButton}>
-        <Button title="Clear" onPress={onClearPressed} />
-      </View>
-    );
-  };
 
   const renderDoneButton = () => {
     return (
       game.showDoneButton && (
         <View style={styles.cta}>
-          <Button title={'Done!'} onPress={action(() => game.recognize(strokes, clear))} />
+          <Button title={'Done!'} onPress={action(() => game.recognize(drawing.strokes))} />
         </View>
       )
     );
@@ -140,19 +117,6 @@ export const DrawingView = observer(({game}: {game: Game}) => {
       <Animated.View style={[styles.emojiContainer, {opacity: fadeAnimation}]}>
         <Text style={styles.emojiView}>{game.emojiToRecognize}</Text>
       </Animated.View>
-    );
-  };
-
-  const renderLives = () => {
-    return <Text style={styles.lives}>{game.lives}</Text>;
-  };
-
-  const renderHeader = () => {
-    return (
-      <View style={styles.header}>
-        {renderLives()}
-        {renderClearButton()}
-      </View>
     );
   };
 
@@ -228,7 +192,6 @@ export const DrawingView = observer(({game}: {game: Game}) => {
       {renderEmoji()}
       {renderConfetti()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
-      {renderHeader()}
       {renderWelcome()}
       {renderDoneButton()}
       {renderPLayNextRoundButton()}
@@ -243,27 +206,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f0f0f0',
   },
-  header: {
-    position: 'absolute',
-    top: 0,
-    flexDirection: 'row',
-    width: '100%',
-    height: 56,
-    paddingHorizontal: 16,
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 1, height: 3},
-        shadowOpacity: 0.2,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  clearButton: {},
   lives: {
     flexGrow: 1,
     color: 'black',

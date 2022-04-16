@@ -2,6 +2,7 @@ import {Stroke} from '../drawing/stroke';
 import recognizer from '../recognizer/recognizer';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {RoundResult} from './roundResult';
+import {Canvas} from '../drawing/canvas';
 
 const EMOJIS = ['😶', '😆', '😂', '🙃', '😍', '😛', '😎', '💩', '🦄'];
 const ROUNDS = EMOJIS.length;
@@ -20,7 +21,7 @@ export class Game {
   state = State.WELCOME;
   recognizedEmoji: string | undefined;
 
-  constructor() {
+  constructor(private drawing: Canvas) {
     makeAutoObservable(this, {}, {autoBind: true});
   }
 
@@ -75,8 +76,7 @@ export class Game {
     return (this.round === ROUNDS && this.isRoundOver) || this.failedAttempts >= LIVES;
   }
 
-  async recognize(strokes: Stroke[], clear: () => void) {
-    clear();
+  async recognize(strokes: Stroke[]) {
     const candidates = await recognizer.recognize(strokes);
     const success = this.emojiToRecognize === candidates[0].text;
     runInAction(() => {
@@ -91,6 +91,7 @@ export class Game {
   }
 
   public startNextRound() {
+    this.drawing.clear();
     this.state = State.DRAWING;
     this.round = this.round + 1;
     this.recognizedEmoji = undefined;
