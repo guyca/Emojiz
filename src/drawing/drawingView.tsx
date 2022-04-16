@@ -8,9 +8,11 @@ import {
   useTouchHandler,
 } from '@shopify/react-native-skia';
 import AnimatedLottieView from 'lottie-react-native';
+import {action} from 'mobx';
+import {observer} from 'mobx-react-lite';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Dimensions, View, Button, Text, Platform, Animated} from 'react-native';
-import {useGameManager} from '../game/useGameManager';
+import {Game} from '../game/game';
 import {Stroke} from './stroke';
 
 const window = Dimensions.get('window');
@@ -20,37 +22,19 @@ textPaint.setStyle(PaintStyle.Stroke);
 textPaint.setStrokeWidth(4);
 textPaint.setColor(Skia.Color('black'));
 
-export const DrawingView: React.FC<any> = () => {
+export const DrawingView = observer(({game}: {game: Game}) => {
   const [pathToDraw, setPathToDraw] = useState<SkPath>(Skia.Path.Make());
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<Stroke>(new Stroke());
-
+  const fadeAnimation = useRef(new Animated.Value(1)).current;
   const clear = useCallback(() => {
     setStrokes([]);
     setCurrentStroke(new Stroke());
     setPathToDraw(Skia.Path.Make());
   }, []);
 
-  const {
-    lives,
-    recognizedEmoji,
-    emojiToRecognize,
-    onDonePressed,
-    onPlayNextRoundPressed,
-    showWelcome,
-    showConfetti,
-    onGetStartedPressed,
-    showDoneButton,
-    showPlayNextRoundButton,
-    showRoundResult,
-    roundResult,
-    isGameWon,
-    isGameLost,
-  } = useGameManager(strokes, clear);
-  const fadeAnimation = useRef(new Animated.Value(1)).current;
-
   useEffect(() => {
-    if (emojiToRecognize) {
+    if (game.emojiToRecognize) {
       fadeAnimation.setValue(1);
       Animated.timing(fadeAnimation, {
         toValue: 0,
@@ -58,7 +42,7 @@ export const DrawingView: React.FC<any> = () => {
         useNativeDriver: true,
       }).start();
     }
-  }, [emojiToRecognize, fadeAnimation]);
+  }, [game.emojiToRecognize, fadeAnimation]);
 
   const onDrawingStart = useCallback(
     ({x, y, timestamp}: TouchInfo) => {
@@ -119,9 +103,9 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderDoneButton = () => {
     return (
-      showDoneButton && (
+      game.showDoneButton && (
         <View style={styles.cta}>
-          <Button title={'Done!'} onPress={onDonePressed} />
+          <Button title={'Done!'} onPress={action(() => game.recognize(strokes, clear))} />
         </View>
       )
     );
@@ -129,9 +113,9 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderPLayNextRoundButton = () => {
     return (
-      showPlayNextRoundButton && (
+      game.showPlayNextRoundButton && (
         <View style={styles.cta}>
-          <Button title={'Play Next Round'} onPress={onPlayNextRoundPressed} />
+          <Button title={'Play Next Round'} onPress={game.startNextRound} />
         </View>
       )
     );
@@ -139,26 +123,28 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderRoundResult = () => {
     return (
-      showRoundResult && (
-        <Text style={[styles.roundResult, {color: roundResult?.color}]}>{roundResult?.text}</Text>
+      game.showRoundResult && (
+        <Text style={[styles.roundResult, {color: game.roundResult?.color}]}>
+          {game.roundResult?.text}
+        </Text>
       )
     );
   };
 
   const renderEmoji = () => {
-    return recognizedEmoji ? (
+    return game.recognizedEmoji ? (
       <View style={styles.emojiContainer}>
-        <Text style={styles.emojiView}>{recognizedEmoji}</Text>
+        <Text style={styles.emojiView}>{game.recognizedEmoji}</Text>
       </View>
     ) : (
       <Animated.View style={[styles.emojiContainer, {opacity: fadeAnimation}]}>
-        <Text style={styles.emojiView}>{emojiToRecognize}</Text>
+        <Text style={styles.emojiView}>{game.emojiToRecognize}</Text>
       </Animated.View>
     );
   };
 
   const renderLives = () => {
-    return <Text style={styles.lives}>{lives}</Text>;
+    return <Text style={styles.lives}>{game.lives}</Text>;
   };
 
   const renderHeader = () => {
@@ -172,7 +158,7 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderWelcome = () => {
     return (
-      showWelcome && (
+      game.showWelcome && (
         <View style={styles.welcomeContainer}>
           <View style={styles.welcomeBackground}>
             <Text style={styles.welcomeTitle}>Welcome to Emojiz!</Text>
@@ -181,7 +167,7 @@ export const DrawingView: React.FC<any> = () => {
                 "Emojiz is a memory game. Each round an emoji will appear briefly on the screen. Draw it from your memory.\n\nIf your drawing was accurate you'll advance to the next round."
               }
             </Text>
-            <Button title="Get Started!" onPress={onGetStartedPressed} />
+            <Button title="Get Started!" onPress={game.startNextRound} />
           </View>
         </View>
       )
@@ -190,7 +176,7 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderConfetti = () => {
     return (
-      showConfetti && (
+      game.showConfetti && (
         <AnimatedLottieView
           style={styles.confetti}
           source={require('../res/confetti.json')}
@@ -203,7 +189,7 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderGameWon = () => {
     return (
-      isGameWon && (
+      game.isGameWon && (
         <View style={styles.welcomeContainer}>
           <View style={styles.welcomeBackground}>
             <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Won!</Text>
@@ -222,7 +208,7 @@ export const DrawingView: React.FC<any> = () => {
 
   const renderGameLost = () => {
     return (
-      isGameLost && (
+      game.isGameLost && (
         <View style={styles.welcomeContainer}>
           <View style={styles.welcomeBackground}>
             <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Over</Text>
@@ -251,7 +237,7 @@ export const DrawingView: React.FC<any> = () => {
       {renderGameLost()}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

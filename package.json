@@ -13,12 +13,14 @@
   "dependencies": {
     "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.109-alpha/shopify-react-native-skia-0.1.109.tgz",
     "lottie-react-native": "^5.0.1",
+    "mobx": "^6.5.0",
+    "mobx-react-lite": "^3.3.0",
     "react": "17.0.2",
-    "react-native": "0.68.0",
-    "zustand": "^3.7.1"
+    "react-native": "0.68.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.23",
