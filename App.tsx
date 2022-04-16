@@ -6,6 +6,7 @@ import {Canvas as Canvas} from './src/drawing/canvas';
 import {DrawingView} from './src/drawing/drawingView';
 import {Game} from './src/game/game';
 import {Header} from './src/header/header';
+import {Confetti} from './src/views/confetti';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,6 +24,7 @@ const App = () => {
       <SafeAreaView>
         <View>
           <DrawingView game={game} drawing={canvas} />
+          <Confetti game={game} />
           <Header game={game} drawing={canvas} />
         </View>
       </SafeAreaView>

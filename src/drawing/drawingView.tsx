@@ -138,19 +138,6 @@ export const DrawingView = observer(({game, drawing}: Props) => {
     );
   };
 
-  const renderConfetti = () => {
-    return (
-      game.showConfetti && (
-        <AnimatedLottieView
-          style={styles.confetti}
-          source={require('../res/confetti.json')}
-          autoPlay
-          loop={false}
-        />
-      )
-    );
-  };
-
   const renderGameWon = () => {
     return (
       game.isGameWon && (
@@ -190,7 +177,6 @@ export const DrawingView = observer(({game, drawing}: Props) => {
   return (
     <View style={styles.container}>
       {renderEmoji()}
-      {renderConfetti()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
       {renderWelcome()}
       {renderDoneButton()}
@@ -264,10 +250,6 @@ const styles = StyleSheet.create({
   },
   welcomeDescription: {
     marginBottom: 32,
-  },
-  confetti: {
-    position: 'absolute',
-    height: '100%',
   },
   roundResult: {
     position: 'absolute',
