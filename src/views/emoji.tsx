@@ -3,6 +3,8 @@ import {observer} from 'mobx-react-lite';
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
 
+const FADE_DURATION = 1000;
+
 export const Emoji = observer(({game}: Props) => {
   const fadeAnimation = useRef(new Animated.Value(1)).current;
 
@@ -11,7 +13,7 @@ export const Emoji = observer(({game}: Props) => {
       fadeAnimation.setValue(1);
       Animated.timing(fadeAnimation, {
         toValue: 0,
-        duration: 2000,
+        duration: FADE_DURATION,
         useNativeDriver: true,
       }).start();
     }
