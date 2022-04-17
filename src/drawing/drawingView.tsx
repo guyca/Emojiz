@@ -7,9 +7,8 @@ import {
   useTouchHandler,
 } from '@shopify/react-native-skia';
 import {observer} from 'mobx-react-lite';
-import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Dimensions, View, Text, Animated} from 'react-native';
-import {Game} from '../game/game';
+import React, {useCallback} from 'react';
+import {StyleSheet, Dimensions, View} from 'react-native';
 import {Canvas} from './canvas';
 
 const window = Dimensions.get('window');
