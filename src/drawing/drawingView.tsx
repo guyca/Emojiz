@@ -6,10 +6,9 @@ import {
   useDrawCallback,
   useTouchHandler,
 } from '@shopify/react-native-skia';
-import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Dimensions, View, Button, Text, Animated} from 'react-native';
+import {StyleSheet, Dimensions, View, Text, Animated} from 'react-native';
 import {Game} from '../game/game';
 import {Canvas} from './canvas';
 
@@ -77,26 +76,6 @@ export const DrawingView = observer(({game, canvas}: Props) => {
     [canvas.strokes],
   );
 
-  const renderDoneButton = () => {
-    return (
-      game.showDoneButton && (
-        <View style={styles.cta}>
-          <Button title={'Done!'} onPress={action(() => game.recognize(canvas.strokes))} />
-        </View>
-      )
-    );
-  };
-
-  const renderPLayNextRoundButton = () => {
-    return (
-      game.showPlayNextRoundButton && (
-        <View style={styles.cta}>
-          <Button title={'Play Next Round'} onPress={game.startNextRound} />
-        </View>
-      )
-    );
-  };
-
   const renderRoundResult = () => {
     return (
       game.showRoundResult && (
@@ -123,8 +102,6 @@ export const DrawingView = observer(({game, canvas}: Props) => {
     <View style={styles.container}>
       {renderEmoji()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
-      {renderDoneButton()}
-      {renderPLayNextRoundButton()}
       {renderRoundResult()}
     </View>
   );
@@ -133,18 +110,6 @@ export const DrawingView = observer(({game, canvas}: Props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#f0f0f0',
-  },
-  lives: {
-    flexGrow: 1,
-    color: 'black',
-    fontSize: 24,
-  },
-  cta: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    alignItems: 'center',
-    paddingBottom: 16,
   },
   stroke: {
     width: window.width,

@@ -10,6 +10,7 @@ import {Confetti} from './src/views/confetti';
 import {Welcome} from './src/alerts/welcome';
 import {GameLost} from './src/alerts/gameLost';
 import {GameWon} from './src/alerts/gameWon';
+import {Cta} from './src/views/cta';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -32,6 +33,7 @@ const App = () => {
           <Welcome game={game} />
           <GameLost game={game} />
           <GameWon game={game} />
+          <Cta game={game} canvas={canvas} />
         </View>
       </SafeAreaView>
     </View>
