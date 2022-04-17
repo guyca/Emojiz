@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {SafeAreaView, StatusBar, useColorScheme, View} from 'react-native';
-
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Canvas as Canvas} from './src/drawing/canvas';
 import {DrawingView} from './src/drawing/drawingView';
@@ -13,6 +12,7 @@ import {GameWon} from './src/alerts/gameWon';
 import {Cta} from './src/views/cta';
 import {RoundResult} from './src/views/roundResult';
 import {Footer} from './src/views/footer';
+import {Emoji} from './src/views/emoji';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -29,7 +29,8 @@ const App = () => {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <SafeAreaView>
         <View>
-          <DrawingView game={game} canvas={canvas} />
+          <Emoji game={game} />
+          <DrawingView canvas={canvas} />
           <Confetti game={game} />
           <Header game={game} canvas={canvas} />
           <Welcome game={game} />

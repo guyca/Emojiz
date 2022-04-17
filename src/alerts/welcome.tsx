@@ -1,3 +1,4 @@
+import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {Game} from '../game/game';
@@ -13,7 +14,7 @@ export const Welcome = observer(({game}: Props) => {
       title="Welcome to Emojiz!"
       description="Emojiz is a memory game. Each round an emoji will appear briefly on the screen. Draw it from your memory.\n\nIf your drawing was accurate you'll advance to the next round."
       ctaText="Get Started!"
-      cta={game.startNextRound}
+      cta={action(() => game.startNextRound())}
     />
   ) : null;
 });

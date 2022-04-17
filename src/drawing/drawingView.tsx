@@ -20,24 +20,10 @@ textPaint.setStrokeWidth(4);
 textPaint.setColor(Skia.Color('black'));
 
 interface Props {
-  game: Game;
   canvas: Canvas;
 }
 
-export const DrawingView = observer(({game, canvas}: Props) => {
-  const fadeAnimation = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    if (game.emojiToRecognize) {
-      fadeAnimation.setValue(1);
-      Animated.timing(fadeAnimation, {
-        toValue: 0,
-        duration: 2000,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [game.emojiToRecognize, fadeAnimation]);
-
+export const DrawingView = observer(({canvas}: Props) => {
   const onDrawingStart = useCallback(
     (touchInfo: TouchInfo) => {
       canvas.onDrawingStart(touchInfo);
@@ -76,42 +62,16 @@ export const DrawingView = observer(({game, canvas}: Props) => {
     [canvas.strokes],
   );
 
-  const renderEmoji = () => {
-    return game.recognizedEmoji ? (
-      <View style={styles.emojiContainer}>
-        <Text style={styles.emojiView}>{game.recognizedEmoji}</Text>
-      </View>
-    ) : (
-      <Animated.View style={[styles.emojiContainer, {opacity: fadeAnimation}]}>
-        <Text style={styles.emojiView}>{game.emojiToRecognize}</Text>
-      </Animated.View>
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      {renderEmoji()}
-      <SkiaView style={styles.stroke} onDraw={onDraw} />
+    <View>
+      <SkiaView style={styles.skiaView} onDraw={onDraw} />
     </View>
   );
 });
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#f0f0f0',
-  },
-  stroke: {
+  skiaView: {
     width: window.width,
     height: '100%',
-  },
-  emojiContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emojiView: {
-    fontSize: 300,
   },
 });
