@@ -64,11 +64,11 @@ export class Game {
     return EMOJIS[this.round - 1];
   }
 
-  get isGameWon(): boolean {
+  get showGameWon(): boolean {
     return this.isGameOver && this.failedAttempts < LIVES;
   }
 
-  get isGameLost(): boolean {
+  get showGameLost(): boolean {
     return this.failedAttempts >= LIVES;
   }
 

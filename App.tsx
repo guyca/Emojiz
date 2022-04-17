@@ -7,6 +7,9 @@ import {DrawingView} from './src/drawing/drawingView';
 import {Game} from './src/game/game';
 import {Header} from './src/header/header';
 import {Confetti} from './src/views/confetti';
+import {Welcome} from './src/alerts/welcome';
+import {GameLost} from './src/alerts/gameLost';
+import {GameWon} from './src/alerts/gameWon';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -23,9 +26,12 @@ const App = () => {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <SafeAreaView>
         <View>
-          <DrawingView game={game} drawing={canvas} />
+          <DrawingView game={game} canvas={canvas} />
           <Confetti game={game} />
-          <Header game={game} drawing={canvas} />
+          <Header game={game} canvas={canvas} />
+          <Welcome game={game} />
+          <GameLost game={game} />
+          <GameWon game={game} />
         </View>
       </SafeAreaView>
     </View>

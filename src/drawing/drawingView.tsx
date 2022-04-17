@@ -6,11 +6,10 @@ import {
   useDrawCallback,
   useTouchHandler,
 } from '@shopify/react-native-skia';
-import AnimatedLottieView from 'lottie-react-native';
 import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import React, {useCallback, useEffect, useRef} from 'react';
-import {StyleSheet, Dimensions, View, Button, Text, Platform, Animated} from 'react-native';
+import {StyleSheet, Dimensions, View, Button, Text, Animated} from 'react-native';
 import {Game} from '../game/game';
 import {Canvas} from './canvas';
 
@@ -23,10 +22,10 @@ textPaint.setColor(Skia.Color('black'));
 
 interface Props {
   game: Game;
-  drawing: Canvas;
+  canvas: Canvas;
 }
 
-export const DrawingView = observer(({game, drawing}: Props) => {
+export const DrawingView = observer(({game, canvas}: Props) => {
   const fadeAnimation = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -42,23 +41,23 @@ export const DrawingView = observer(({game, drawing}: Props) => {
 
   const onDrawingStart = useCallback(
     (touchInfo: TouchInfo) => {
-      drawing.onDrawingStart(touchInfo);
+      canvas.onDrawingStart(touchInfo);
     },
-    [drawing],
+    [canvas],
   );
 
   const onDrawingActive = useCallback(
     (touchInfo: TouchInfo) => {
-      drawing.onDrawingActive(touchInfo);
+      canvas.onDrawingActive(touchInfo);
     },
-    [drawing],
+    [canvas],
   );
 
   const onDrawingFinished = useCallback(
     (touchInfo: TouchInfo) => {
-      drawing.onDrawingFinished(touchInfo);
+      canvas.onDrawingFinished(touchInfo);
     },
-    [drawing],
+    [canvas],
   );
 
   const touchHandler = useTouchHandler(
@@ -71,18 +70,18 @@ export const DrawingView = observer(({game, drawing}: Props) => {
   );
 
   const onDraw = useDrawCallback(
-    (canvas, info) => {
+    (skiaCanvas, info) => {
       touchHandler(info.touches);
-      canvas.drawPath(drawing.pathToDraw, textPaint);
+      skiaCanvas.drawPath(canvas.pathToDraw, textPaint);
     },
-    [drawing.strokes],
+    [canvas.strokes],
   );
 
   const renderDoneButton = () => {
     return (
       game.showDoneButton && (
         <View style={styles.cta}>
-          <Button title={'Done!'} onPress={action(() => game.recognize(drawing.strokes))} />
+          <Button title={'Done!'} onPress={action(() => game.recognize(canvas.strokes))} />
         </View>
       )
     );
@@ -120,70 +119,13 @@ export const DrawingView = observer(({game, drawing}: Props) => {
     );
   };
 
-  const renderWelcome = () => {
-    return (
-      game.showWelcome && (
-        <View style={styles.welcomeContainer}>
-          <View style={styles.welcomeBackground}>
-            <Text style={styles.welcomeTitle}>Welcome to Emojiz!</Text>
-            <Text style={styles.welcomeDescription}>
-              {
-                "Emojiz is a memory game. Each round an emoji will appear briefly on the screen. Draw it from your memory.\n\nIf your drawing was accurate you'll advance to the next round."
-              }
-            </Text>
-            <Button title="Get Started!" onPress={game.startNextRound} />
-          </View>
-        </View>
-      )
-    );
-  };
-
-  const renderGameWon = () => {
-    return (
-      game.isGameWon && (
-        <View style={styles.welcomeContainer}>
-          <View style={styles.welcomeBackground}>
-            <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Won!</Text>
-            <AnimatedLottieView
-              style={{width: '100%'}}
-              source={require('../res/gameWon.json')}
-              autoPlay
-              loop={false}
-              speed={0.7}
-            />
-          </View>
-        </View>
-      )
-    );
-  };
-
-  const renderGameLost = () => {
-    return (
-      game.isGameLost && (
-        <View style={styles.welcomeContainer}>
-          <View style={styles.welcomeBackground}>
-            <Text style={[styles.welcomeTitle, {marginBottom: 0}]}>Game Over</Text>
-            <AnimatedLottieView
-              style={{width: '100%'}}
-              source={require('../res/crying.json')}
-              autoPlay
-            />
-          </View>
-        </View>
-      )
-    );
-  };
-
   return (
     <View style={styles.container}>
       {renderEmoji()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
-      {renderWelcome()}
       {renderDoneButton()}
       {renderPLayNextRoundButton()}
       {renderRoundResult()}
-      {renderGameWon()}
-      {renderGameLost()}
     </View>
   );
 });
@@ -217,39 +159,6 @@ const styles = StyleSheet.create({
   },
   emojiView: {
     fontSize: 300,
-  },
-  welcomeContainer: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-  },
-  welcomeBackground: {
-    backgroundColor: 'lightgrey',
-    padding: 32,
-    width: '80%',
-    alignSelf: 'center',
-    borderRadius: 8,
-    alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 6, height: 6},
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  welcomeTitle: {
-    fontWeight: 'bold',
-    fontSize: 22,
-    marginBottom: 16,
-  },
-  welcomeDescription: {
-    marginBottom: 32,
   },
   roundResult: {
     position: 'absolute',

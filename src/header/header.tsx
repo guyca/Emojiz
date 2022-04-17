@@ -9,20 +9,16 @@ export const HEADER_HEIGHT = 56;
 
 interface Props {
   game: Game;
-  drawing: Canvas;
+  canvas: Canvas;
 }
 
-export const Header = observer(({game, drawing}: Props) => {
+export const Header = observer(({game, canvas}: Props) => {
   const renderLives = () => {
     return <Text style={styles.lives}>{game.lives}</Text>;
   };
 
   const renderClearButton = () => {
-    return (
-      <View style={styles.clearButton}>
-        <Button title="Clear" onPress={action(() => drawing.clear())} />
-      </View>
-    );
+    return <Button title="Clear" onPress={action(() => canvas.clear())} />;
   };
 
   return (
@@ -54,7 +50,6 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  clearButton: {},
   lives: {
     flexGrow: 1,
     color: 'black',
