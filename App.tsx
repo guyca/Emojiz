@@ -11,6 +11,8 @@ import {Welcome} from './src/alerts/welcome';
 import {GameLost} from './src/alerts/gameLost';
 import {GameWon} from './src/alerts/gameWon';
 import {Cta} from './src/views/cta';
+import {RoundResult} from './src/views/roundResult';
+import {Footer} from './src/views/footer';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -33,7 +35,10 @@ const App = () => {
           <Welcome game={game} />
           <GameLost game={game} />
           <GameWon game={game} />
-          <Cta game={game} canvas={canvas} />
+          <Footer>
+            <RoundResult game={game} />
+            <Cta game={game} canvas={canvas} />
+          </Footer>
         </View>
       </SafeAreaView>
     </View>

@@ -76,16 +76,6 @@ export const DrawingView = observer(({game, canvas}: Props) => {
     [canvas.strokes],
   );
 
-  const renderRoundResult = () => {
-    return (
-      game.showRoundResult && (
-        <Text style={[styles.roundResult, {color: game.roundResult?.color}]}>
-          {game.roundResult?.text}
-        </Text>
-      )
-    );
-  };
-
   const renderEmoji = () => {
     return game.recognizedEmoji ? (
       <View style={styles.emojiContainer}>
@@ -102,7 +92,6 @@ export const DrawingView = observer(({game, canvas}: Props) => {
     <View style={styles.container}>
       {renderEmoji()}
       <SkiaView style={styles.stroke} onDraw={onDraw} />
-      {renderRoundResult()}
     </View>
   );
 });
@@ -124,12 +113,5 @@ const styles = StyleSheet.create({
   },
   emojiView: {
     fontSize: 300,
-  },
-  roundResult: {
-    position: 'absolute',
-    bottom: 100,
-    alignSelf: 'center',
-    fontSize: 18,
-    fontWeight: '900',
   },
 });

@@ -1,7 +1,7 @@
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {Game} from '../game/game';
-import {Alert} from '../views/alert';
+import {Alert} from './alert';
 
 interface Props {
   game: Game;

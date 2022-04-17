@@ -29,9 +29,6 @@ export const Cta = observer(({game, canvas}: Props) => {
 
 const styles = StyleSheet.create({
   cta: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
     alignItems: 'center',
     paddingBottom: 16,
   },
