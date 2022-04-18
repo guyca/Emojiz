@@ -21,7 +21,7 @@ export class Game {
   state = State.WELCOME;
   recognizedEmoji: string | undefined;
 
-  constructor(private drawing: Canvas) {
+  constructor(private canvas: Canvas) {
     makeAutoObservable(this, {}, {autoBind: true});
   }
 
@@ -91,7 +91,7 @@ export class Game {
   }
 
   public startNextRound() {
-    this.drawing.clear();
+    this.canvas.clear();
     this.state = State.DRAWING;
     this.round = this.round + 1;
     this.recognizedEmoji = undefined;
