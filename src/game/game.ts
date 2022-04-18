@@ -19,7 +19,7 @@ export class Game {
   round = 0;
   failedAttempts = 0;
   state = State.WELCOME;
-  recognizedEmoji: string | undefined;
+  recognizedEmoji = '';
 
   constructor(private canvas: Canvas) {
     makeAutoObservable(this, {}, {autoBind: true});
@@ -76,8 +76,8 @@ export class Game {
     return (this.round === ROUNDS && this.isRoundOver) || this.failedAttempts >= LIVES;
   }
 
-  async recognize(strokes: Stroke[]) {
-    const candidates = await recognizer.recognize(strokes);
+  async recognize() {
+    const candidates = await recognizer.recognize(this.canvas.strokes);
     const success = this.emojiToRecognize === candidates[0].text;
     runInAction(() => {
       if (success) {
@@ -94,6 +94,6 @@ export class Game {
     this.canvas.clear();
     this.state = State.DRAWING;
     this.round = this.round + 1;
-    this.recognizedEmoji = undefined;
+    this.recognizedEmoji = '';
   }
 }

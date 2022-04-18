@@ -38,7 +38,7 @@ const App = () => {
           <GameWon game={game} />
           <Footer>
             <RoundResult game={game} />
-            <Cta game={game} canvas={canvas} />
+            <Cta game={game} />
           </Footer>
         </View>
       </SafeAreaView>

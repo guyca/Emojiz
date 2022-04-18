@@ -32,10 +32,13 @@ export const DrawingView = observer(({canvas}: Props) => {
     [],
   );
 
-  const onDraw = useDrawCallback((skiaCanvas, info) => {
-    touchHandler(info.touches);
-    skiaCanvas.drawPath(canvas.pathToDraw, textPaint);
-  }, []);
+  const onDraw = useDrawCallback(
+    (skiaCanvas, info) => {
+      touchHandler(info.touches);
+      skiaCanvas.drawPath(canvas.pathToDraw, textPaint);
+    },
+    [canvas.strokes],
+  );
 
   return <SkiaView style={styles.skiaView} onDraw={onDraw} />;
 });

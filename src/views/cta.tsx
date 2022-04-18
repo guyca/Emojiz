@@ -1,15 +1,10 @@
-import {Props as BaseProps} from '@types';
+import {Props} from '@types';
 import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {Button, StyleSheet, View} from 'react-native';
-import {Canvas} from 'src/drawing/canvas';
 
-interface Props extends BaseProps {
-  canvas: Canvas;
-}
-
-export const Cta = observer(({game, canvas}: Props) => {
+export const Cta = observer(({game}: Props) => {
   const renderButton = (text: string, cta: () => void) => {
     return (
       <View style={styles.cta}>
@@ -20,10 +15,13 @@ export const Cta = observer(({game, canvas}: Props) => {
   return game.showDoneButton
     ? renderButton(
         'Done',
-        action(() => game.recognize(canvas.strokes)),
+        action(() => game.recognize()),
       )
     : game.showPlayNextRoundButton
-    ? renderButton('Play Next Round', game.startNextRound)
+    ? renderButton(
+        'Play Next Round',
+        action(() => game.startNextRound()),
+      )
     : null;
 });
 
