@@ -1,7 +1,7 @@
-import {Props} from '@types';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
+import {Props} from '../../types';
 
 export const RoundResult = observer(({game}: Props) => {
   return game.showRoundResult ? (

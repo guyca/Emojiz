@@ -1,4 +1,3 @@
-import {Stroke} from '../drawing/stroke';
 import recognizer from '../recognizer/recognizer';
 import {makeAutoObservable, runInAction} from 'mobx';
 import {RoundResult} from './roundResult';
@@ -93,7 +92,7 @@ export class Game {
   public startNextRound() {
     this.canvas.clear();
     this.state = State.DRAWING;
-    this.round = this.round + 1;
+    this.round++;
     this.recognizedEmoji = '';
   }
 }

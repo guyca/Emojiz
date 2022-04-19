@@ -1,7 +1,7 @@
-import {Props} from '@types';
 import {observer} from 'mobx-react-lite';
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
+import {Props} from '../../types';
 
 const FADE_DURATION = 1000;
 

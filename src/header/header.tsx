@@ -5,8 +5,6 @@ import {Button, Platform, StyleSheet, Text, View} from 'react-native';
 import {Canvas} from '../drawing/canvas';
 import {Game} from '../game/game';
 
-export const HEADER_HEIGHT = 56;
-
 interface Props {
   game: Game;
   canvas: Canvas;
@@ -35,7 +33,7 @@ const styles = StyleSheet.create({
     top: 0,
     flexDirection: 'row',
     width: '100%',
-    height: HEADER_HEIGHT,
+    height: 56,
     paddingHorizontal: 16,
     alignItems: 'center',
     backgroundColor: '#f0f0f0',

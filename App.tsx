@@ -31,8 +31,8 @@ const App = () => {
         <View>
           <Emoji game={game} />
           <DrawingView canvas={canvas} />
-          <Confetti game={game} />
           <Header game={game} canvas={canvas} />
+          <Confetti game={game} />
           <Welcome game={game} />
           <GameLost game={game} />
           <GameWon game={game} />

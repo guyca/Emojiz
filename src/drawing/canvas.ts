@@ -8,14 +8,7 @@ export class Canvas {
   currentStroke = new Stroke();
 
   constructor() {
-    makeObservable(this, {
-      strokes: observable,
-      currentStroke: observable,
-      onDrawingStart: action,
-      onDrawingActive: action,
-      onDrawingFinished: action,
-      clear: action,
-    });
+    makeObservable(this, {strokes: observable});
   }
 
   onDrawingStart({x, y, timestamp}: TouchInfo) {

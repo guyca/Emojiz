@@ -1,8 +1,8 @@
-import {Props} from '@types';
 import {action} from 'mobx';
 import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {Button, StyleSheet, View} from 'react-native';
+import {Props} from '../../types';
 
 export const Cta = observer(({game}: Props) => {
   const renderButton = (text: string, cta: () => void) => {
