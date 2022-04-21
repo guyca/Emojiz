@@ -24,15 +24,22 @@ export class Game {
     makeAutoObservable(this, {}, {autoBind: true});
   }
 
+  public startNextRound() {
+    this.canvas.clear();
+    this.state = State.DRAWING;
+    this.round++;
+    this.recognizedEmoji = '';
+  }
+
+  get showWelcome(): boolean {
+    return this.state === State.WELCOME;
+  }
+
   get roundResult(): RoundResult {
     return {
       text: this.state === State.SUCCESS ? 'Correct!' : 'Better Luck Next Time',
       color: this.state === State.SUCCESS ? 'green' : 'red',
     };
-  }
-
-  get showWelcome(): boolean {
-    return this.state === State.WELCOME;
   }
 
   get showConfetti(): boolean {
@@ -87,12 +94,5 @@ export class Game {
       }
       this.recognizedEmoji = candidates[0].text;
     });
-  }
-
-  public startNextRound() {
-    this.canvas.clear();
-    this.state = State.DRAWING;
-    this.round++;
-    this.recognizedEmoji = '';
   }
 }
