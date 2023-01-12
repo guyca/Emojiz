@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@shopify/react-native-skia": "https://github.com/Shopify/react-native-skia/releases/download/v0.1.109-alpha/shopify-react-native-skia-0.1.109.tgz",
+    "lodash": "^4.17.21",
     "lottie-react-native": "^5.0.1",
     "mobx": "^6.5.0",
     "mobx-react-lite": "^3.3.0",
     "react": "17.0.2",
-    "react-native": "0.68.0"
+    "react-native": "0.68.0",
+    "react-obsidian": "^0.0.33"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
