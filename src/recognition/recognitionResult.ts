@@ -1,4 +1,4 @@
-import {RoundResult} from './roundResult';
+import {RoundResult} from '../game/roundResult';
 
 export interface RecognitionResult {
   recognizedEmoji: string;
