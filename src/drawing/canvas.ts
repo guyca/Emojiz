@@ -1,15 +1,11 @@
 import {Skia, TouchInfo} from '@shopify/react-native-skia';
-import {action, makeObservable, observable} from 'mobx';
+import {Observable} from 'react-obsidian';
 import {Stroke} from './stroke';
 
 export class Canvas {
   pathToDraw = Skia.Path.Make();
-  strokes: Stroke[] = [];
+  strokes = new Observable<Stroke[]>([]);
   currentStroke = new Stroke();
-
-  constructor() {
-    makeObservable(this, {strokes: observable});
-  }
 
   onDrawingStart({x, y, timestamp}: TouchInfo) {
     this.currentStroke.addPoint(x, y, timestamp);
@@ -24,13 +20,13 @@ export class Canvas {
   onDrawingFinished({x, y, timestamp}: TouchInfo) {
     this.pathToDraw.lineTo(x, y);
     this.currentStroke.addPoint(x, y, timestamp);
-    this.strokes.push(this.currentStroke);
+    this.strokes.value.push(this.currentStroke);
     this.currentStroke = new Stroke();
   }
 
   clear() {
     this.pathToDraw = Skia.Path.Make();
-    this.strokes = [];
+    this.strokes.value = [];
     this.currentStroke = new Stroke();
   }
 }

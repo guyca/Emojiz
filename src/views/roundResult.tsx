@@ -1,15 +1,15 @@
-import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {StyleSheet, Text} from 'react-native';
-import {Props} from '../../types';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 
-export const RoundResult = observer(({game}: Props) => {
-  return game.showRoundResult ? (
-    <Text style={[styles.roundResult, {color: game.roundResult.color}]}>
-      {game.roundResult.text}
-    </Text>
+export const RoundResult = injectComponent(({state}: DependenciesOf<ApplicationGraph, 'state'>) => {
+  const [result] = useObserver(state.round.result);
+
+  return result ? (
+    <Text style={[styles.roundResult, {color: result.color}]}>{result.text}</Text>
   ) : null;
-});
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   roundResult: {

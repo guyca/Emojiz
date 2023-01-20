@@ -1,15 +1,13 @@
 import AnimatedLottieView from 'lottie-react-native';
-import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Game} from '../game/game';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 
-interface Props {
-  game: Game;
-}
+export const Confetti = injectComponent(({state}: DependenciesOf<ApplicationGraph, 'state'>) => {
+  const [status] = useObserver(state.round.status);
 
-export const Confetti = observer(({game}: Props) => {
-  return game.showConfetti ? (
+  return status === 'SUCCESS' ? (
     <AnimatedLottieView
       style={styles.confetti}
       source={require('../res/confetti.json')}
@@ -17,7 +15,7 @@ export const Confetti = observer(({game}: Props) => {
       loop={false}
     />
   ) : null;
-});
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   confetti: {

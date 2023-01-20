@@ -1,31 +1,25 @@
 import AnimatedLottieView from 'lottie-react-native';
 import React from 'react';
 import {Button, Platform, StyleSheet, Text, View} from 'react-native';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 
-interface Props {
-  title: string;
-  description?: string;
-  ctaText?: string;
-  cta?: () => void;
-  image?: {
-    source: string;
-    speed?: number;
-    loop?: boolean;
-  };
-}
+type Injected = DependenciesOf<ApplicationGraph, 'alertPresenter'>;
 
-export const Alert = ({title, description, image, ctaText, cta}: Props) => {
-  return (
+export const Alert = injectComponent(({alertPresenter}: Injected) => {
+  const [alert] = useObserver(alertPresenter.alert);
+
+  return alert ? (
     <View style={styles.container}>
       <View style={styles.background}>
-        <Text style={styles.title}>{title}</Text>
-        {description && <Text style={styles.description}>{description}</Text>}
-        {image && <AnimatedLottieView style={styles.image} autoPlay {...image} />}
-        {ctaText && <Button title={ctaText} onPress={cta} />}
+        {alert.title && <Text style={styles.title}>{alert.title}</Text>}
+        {alert.description && <Text style={styles.description}>{alert.description}</Text>}
+        {alert.image && <AnimatedLottieView style={styles.image} autoPlay {...alert.image} />}
+        {alert.cta && <Button title={alert.cta.text} onPress={alert.cta.onPress} />}
       </View>
     </View>
-  );
-};
+  ) : null;
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   container: {

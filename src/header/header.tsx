@@ -1,18 +1,16 @@
 import {action} from 'mobx';
-import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {Button, Platform, StyleSheet, Text, View} from 'react-native';
-import {Canvas} from '../drawing/canvas';
-import {Game} from '../game/game';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 
-interface Props {
-  game: Game;
-  canvas: Canvas;
-}
+type Injected = DependenciesOf<ApplicationGraph, 'state' | 'canvas' | 'appearance'>;
 
-export const Header = observer(({game, canvas}: Props) => {
+export const Header = injectComponent(({state, canvas, appearance}: Injected) => {
+  const [lives] = useObserver(state.lives);
+
   const renderLives = () => {
-    return <Text style={styles.lives}>{game.lives}</Text>;
+    return <Text style={styles.lives}>{lives}</Text>;
   };
 
   const renderClearButton = () => {
@@ -20,12 +18,12 @@ export const Header = observer(({game, canvas}: Props) => {
   };
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, {backgroundColor: appearance.backgroundColor}]}>
       {renderLives()}
       {renderClearButton()}
     </View>
   );
-});
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   header: {
@@ -36,7 +34,6 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 16,
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
     ...Platform.select({
       ios: {
         shadowColor: '#000',

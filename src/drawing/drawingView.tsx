@@ -6,9 +6,10 @@ import {
   useDrawCallback,
   useTouchHandler,
 } from '@shopify/react-native-skia';
-import {observer} from 'mobx-react-lite';
 import React from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
+import {injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 import {Canvas} from './canvas';
 
 const window = Dimensions.get('window');
@@ -22,7 +23,8 @@ interface Props {
   canvas: Canvas;
 }
 
-export const DrawingView = observer(({canvas}: Props) => {
+export const DrawingView = injectComponent(({canvas}: Props) => {
+  const [strokes] = useObserver(canvas.strokes);
   const touchHandler = useTouchHandler(
     {
       onStart: (touchInfo: TouchInfo) => canvas.onDrawingStart(touchInfo),
@@ -37,11 +39,11 @@ export const DrawingView = observer(({canvas}: Props) => {
       touchHandler(info.touches);
       skiaCanvas.drawPath(canvas.pathToDraw, textPaint);
     },
-    [canvas.strokes],
+    [strokes],
   );
 
   return <SkiaView style={styles.skiaView} onDraw={onDraw} />;
-});
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   skiaView: {

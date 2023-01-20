@@ -1,15 +1,17 @@
-import {observer} from 'mobx-react-lite';
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet, Text, View} from 'react-native';
-import {Props} from '../../types';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
+import {ApplicationGraph} from '../di/ApplicationGraph';
 
 const FADE_DURATION = 1000;
 
-export const Emoji = observer(({game}: Props) => {
+export const Emoji = injectComponent(({state}: DependenciesOf<ApplicationGraph, 'state'>) => {
+  const [emojiToRecognize] = useObserver(state.round.emojiToRecognize);
+  const [recognizedEmoji] = useObserver(state.round.recognizedEmoji);
   const fadeAnimation = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    if (game.emojiToRecognize) {
+    if (emojiToRecognize) {
       fadeAnimation.setValue(1);
       Animated.timing(fadeAnimation, {
         toValue: 0,
@@ -17,18 +19,18 @@ export const Emoji = observer(({game}: Props) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [game.emojiToRecognize, fadeAnimation]);
+  }, [emojiToRecognize, fadeAnimation]);
 
-  return game.recognizedEmoji ? (
+  return recognizedEmoji ? (
     <View style={styles.emojiContainer}>
-      <Text style={styles.emojiView}>{game.recognizedEmoji}</Text>
+      <Text style={styles.emojiView}>{recognizedEmoji}</Text>
     </View>
   ) : (
     <Animated.View style={[styles.emojiContainer, {opacity: fadeAnimation}]}>
-      <Text style={styles.emojiView}>{game.emojiToRecognize}</Text>
+      <Text style={styles.emojiView}>{emojiToRecognize}</Text>
     </Animated.View>
   );
-});
+}, ApplicationGraph);
 
 const styles = StyleSheet.create({
   emojiContainer: {
