@@ -1,4 +1,8 @@
-# Emojiz
+<h1 align="center">
+  <img src=".logo.png"/><br/>
+  Emojiz
+</h1>
+
 A memory game written in React Native.
 <br><br>
 
