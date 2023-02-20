@@ -13,14 +13,14 @@ export class RecognizeEmojiUseCase {
 
   public async recognize() {
     const candidates = await this.recognizer.recognize(this.canvas.strokes.value);
+    this.updateRoundResult(candidates);
     if (this.state.isGameOver) {
-      this.showGameOverAlert(candidates);
-    } else {
-      this.handleRecognitionResult(candidates);
+      this.alertPresenter.showGameOverAlert();
+      this.state.round.gameOver();
     }
   }
 
-  private handleRecognitionResult(candidates: {text: string; score: number}[]) {
+  private updateRoundResult(candidates: {text: string; score: number}[]) {
     if (this.isCorrect(candidates)) {
       this.state.round.status.value = 'SUCCESS';
     } else {
@@ -28,16 +28,6 @@ export class RecognizeEmojiUseCase {
       this.state.failedAttempts.value += 1;
     }
     this.state.round.recognizedEmoji.value = candidates[0].text;
-  }
-
-  private showGameOverAlert(candidates: {text: string; score: number}[]) {
-    this.canvas.clear();
-    if (this.isCorrect(candidates)) {
-      this.alertPresenter.showGameWonAlert();
-    } else {
-      this.alertPresenter.showGameLostAlert();
-      this.state.failedAttempts.value += 1;
-    }
   }
 
   private isCorrect(candidates: {text: string; score: number}[]) {

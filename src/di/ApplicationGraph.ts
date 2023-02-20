@@ -15,18 +15,18 @@ export class ApplicationGraph extends ObjectGraph {
   }
 
   @Provides()
-  state(): GameState {
-    return new GameState();
-  }
-
-  @Provides()
   canvas(): Canvas {
     return new Canvas();
   }
 
   @Provides()
-  alertPresenter(): AlertPresenter {
-    return new AlertPresenter(new AlertFactory());
+  alertPresenter(state: GameState): AlertPresenter {
+    return new AlertPresenter(state, new AlertFactory());
+  }
+
+  @Provides()
+  state(): GameState {
+    return new GameState();
   }
 
   @Provides()

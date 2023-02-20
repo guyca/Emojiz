@@ -1,13 +1,15 @@
 import {Observable, MediatorObservable} from 'react-obsidian';
 import {RoundResult} from './roundResult';
-import {Status, EMOJIS, ROUNDS} from './gameState';
+import {EMOJIS, ROUNDS} from './gameState';
+
+export type Status = 'SUCCESS' | 'FAIL' | 'IN_PROGRESS' | 'GAME_OVER';
 
 export class Round {
   public readonly status = new Observable<Status>('IN_PROGRESS');
   public readonly result = new MediatorObservable<RoundResult | undefined>().addSource(
     this.status,
     status => {
-      if (status === 'IN_PROGRESS') {
+      if (status === 'IN_PROGRESS' || status === 'GAME_OVER') {
         this.result.value = undefined;
       } else {
         this.result.value = {
@@ -27,6 +29,9 @@ export class Round {
         case 'SUCCESS':
         case 'FAIL':
           this.cta.value = 'Next';
+          break;
+        case 'GAME_OVER':
+          this.cta.value = undefined;
           break;
       }
     },
@@ -49,5 +54,9 @@ export class Round {
     this.number.value += 1;
     this.recognizedEmoji.value = undefined;
     this.status.value = 'IN_PROGRESS';
+  }
+
+  gameOver() {
+    this.status.value = 'GAME_OVER';
   }
 }
