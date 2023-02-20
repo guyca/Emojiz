@@ -1,4 +1,3 @@
-import {action} from 'mobx';
 import React from 'react';
 import {Button, Platform, StyleSheet, Text, View} from 'react-native';
 import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
@@ -14,7 +13,7 @@ export const Header = injectComponent(({state, canvas, appearance}: Injected) =>
   };
 
   const renderClearButton = () => {
-    return <Button title="Clear" onPress={action(() => canvas.clear())} />;
+    return <Button title="Clear" onPress={() => canvas.clear()} />;
   };
 
   return (
