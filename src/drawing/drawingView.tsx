@@ -8,7 +8,7 @@ import {
 } from '@shopify/react-native-skia';
 import React from 'react';
 import {StyleSheet, Dimensions} from 'react-native';
-import {injectComponent, useObserver} from 'react-obsidian';
+import {DependenciesOf, injectComponent, useObserver} from 'react-obsidian';
 import {ApplicationGraph} from '../di/ApplicationGraph';
 import {Canvas} from './canvas';
 
@@ -19,11 +19,9 @@ textPaint.setStyle(PaintStyle.Stroke);
 textPaint.setStrokeWidth(4);
 textPaint.setColor(Skia.Color('black'));
 
-interface Props {
-  canvas: Canvas;
-}
+type Injected = DependenciesOf<ApplicationGraph, 'canvas'>;
 
-export const DrawingView = injectComponent(({canvas}: Props) => {
+export const DrawingView = injectComponent(({canvas}: Injected) => {
   const [strokes] = useObserver(canvas.strokes);
   const touchHandler = useTouchHandler(
     {
